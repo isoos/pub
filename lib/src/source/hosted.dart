@@ -1132,7 +1132,6 @@ See $contentHashesDocumentationUrl.
     } else if (error is AuthenticationException) {
       String? hint;
       var message = 'authentication failed';
-
       assert(error.statusCode == 401 || error.statusCode == 403);
       if (error.statusCode == 401) {
         hint = '$hostedUrl package repository requested authentication!\n'

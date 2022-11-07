@@ -52,12 +52,12 @@ class _AuthenticatedClient extends http.BaseClient {
       final response = await _inner.send(request);
       if (response.statusCode == 401) {
         _detectInvalidCredentials = true;
-        _throwAuthException(response);
+        await _throwAuthException(response);
       }
       return response;
     } on PubHttpException catch (e) {
       if (e.response.statusCode == 403) {
-        _throwAuthException(e.response);
+        await _throwAuthException(e.response);
       }
       rethrow;
     }
@@ -68,7 +68,7 @@ class _AuthenticatedClient extends http.BaseClient {
   /// [RFC 7235 section 4.1][RFC] specifications.
   ///
   /// [RFC]: https://datatracker.ietf.org/doc/html/rfc7235#section-4.1
-  void _throwAuthException(http.BaseResponse response) {
+  Future<void> _throwAuthException(http.BaseResponse response) async {
     String? serverMessage;
     if (response.headers.containsKey(HttpHeaders.wwwAuthenticateHeader)) {
       try {
@@ -84,6 +84,12 @@ class _AuthenticatedClient extends http.BaseClient {
       } on FormatException {
         // Ignore errors might be caused when parsing invalid header values
       }
+    }
+    if (serverMessage == null && response is http.Response) {
+      serverMessage = response.body;
+    }
+    if (serverMessage == null && response is http.StreamedResponse) {
+      serverMessage = await response.stream.bytesToString();
     }
     if (serverMessage != null) {
       // Only allow printable ASCII, map anything else to whitespace, take

@@ -57,8 +57,7 @@ void main() {
       'follows analysis_options.yaml and should warn if package contains errors in pubspec.yaml',
       () async {
     await d.dir(appPath, [
-      d.libPubspec('test_pkg', '1.0.0',
-          sdk: '>=1.8.0 <=2.0.0',
+      d.libPubspec('test_pkg', '1.0.0', sdk: '>=1.8.0 <=2.0.0',
           // Using http where https is recommended.
           extras: {'repository': 'http://repo.org/'}),
       d.file('LICENSE', 'Eh, do what you want.'),
