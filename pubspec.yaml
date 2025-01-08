@@ -8,7 +8,7 @@ dependencies:
   args: ^2.6.0
   async: ^2.11.0
   cli_util: ^0.4.1
-  collection: ^1.18.0
+  collection: ^1.19.1
   convert: ^3.1.2
   crypto: ^3.0.6
   frontend_server_client: ^4.0.0
